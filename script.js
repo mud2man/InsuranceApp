@@ -1,7 +1,7 @@
 var KEY = 'ca17898b676ff6157b452fbbe3d4235b07356f3d';
 var years, ageCategories, incomeCategories, sexCategories;
 
-function getWeather(query){
+function getInsuranceData(query){
  $.ajax({
     url: "https://api.census.gov/data/timeseries/healthins/sahie",
     data: {
@@ -10,8 +10,8 @@ function getWeather(query){
        key: KEY
     },
     success: function(response){
-     //console.log(query);
-     //console.log(response);
+     console.log(query);
+     console.log(response);
      years = ["2006", "2007"];
      ageCategories = ["0", "1", "2"];
      incomeCategories = ["0", "1", "2"];
@@ -59,8 +59,9 @@ function getWeather(query){
 }
 
 $(document).ready(function() {
-  document.getElementById('search-form').addEventListener('submit', function (e) {
+  document.getElementById('search-form-sex').addEventListener('submit', function (e) {
     e.preventDefault(); //prevent a submit button from submitting a form.
-    getWeather(document.getElementById('location').value);
+    getInsuranceData("namo");
+    //getWeather(document.getElementById('location').value);
 }, false);
 });
