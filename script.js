@@ -1,7 +1,6 @@
 var KEY = 'ca17898b676ff6157b452fbbe3d4235b07356f3d';
-var years, ageCategories, incomeCategories, sexCategories;
 
-function getInsuranceData(query){
+function getInsuranceData(years, ageCategories, incomeCategories, sexCategories){
  $.ajax({
     url: "https://api.census.gov/data/timeseries/healthins/sahie",
     data: {
@@ -10,12 +9,7 @@ function getInsuranceData(query){
        key: KEY
     },
     success: function(response){
-     console.log(query);
      console.log(response);
-     years = ["2006", "2007"];
-     ageCategories = ["0", "1", "2"];
-     incomeCategories = ["0", "1", "2"];
-     sexCategories = ["0"];
      var queryRows = "";
      for(y = 0; y < years.length; ++y){
        var year = years[y];
@@ -31,7 +25,7 @@ function getInsuranceData(query){
                   queryRow += "year: " + year;
                   queryRow += ", age category: " + age;
                   queryRow += ", income category: " + income;
-                  queryRow += ", sex category: " + income;
+                  queryRow += ", sex category: " + sex;
                   var insuredPeopleNum = parseInt(response[r][1]);
                   var insuredPeopleMe = parseInt(response[r][2]);
                   var uninsuredPeopleNum = parseInt(response[r][3]);
@@ -58,10 +52,67 @@ function getInsuranceData(query){
  });
 }
 
+function yearCheckbox(searchFormYear){
+    var years = [];
+    var elements = searchFormYear.elements;
+    for(var index = 0; index < elements.length; ++index){
+      var checkBox = elements[index].checked;
+      if(checkBox == true){
+        years.push(elements[index].value);
+      }
+    }
+    return years;
+}
+
+function ageCheckbox(searchFormAge){
+  var ageCategories = [];
+  var elements = searchFormAge.elements;
+  for(var index = 0; index < elements.length; ++index){
+    var checkBox = elements[index].checked;
+    if(checkBox == true){
+      ageCategories.push(elements[index].value);
+    }
+  }
+  return ageCategories;
+}
+
+function incomeCheckbox(searchFormIncome){
+  var incomeCategories = [];
+  var elements = searchFormIncome.elements;
+  for(var index = 0; index < elements.length; ++index){
+    var checkBox = elements[index].checked;
+    if(checkBox == true){
+      incomeCategories.push(elements[index].value);
+    }
+  }
+  return incomeCategories;
+}
+
+function sexCheckbox(searchFormSex){
+  var sexCategories = [];
+  var elements = searchFormSex.elements;
+  for(var index = 0; index < elements.length; ++index){
+    var checkBox = elements[index].checked;
+    if(checkBox == true){
+      sexCategories.push(elements[index].value);
+    }
+  }
+  return sexCategories;
+}
+
 $(document).ready(function() {
-  document.getElementById('search-form-sex').addEventListener('submit', function (e) {
+  document.getElementById('searchFormSex').addEventListener('submit', function (e) {
     e.preventDefault(); //prevent a submit button from submitting a form.
-    getInsuranceData("namo");
-    //getWeather(document.getElementById('location').value);
+    var years = yearCheckbox(searchFormYear);
+    console.log("years:" + years);
+    var ageCategories = ageCheckbox(searchFormAge);
+    console.log("ageCategories:" + ageCategories);
+    var incomeCategories = ageCheckbox(searchFormIncome);
+    console.log("incomeCategories:" + incomeCategories);
+    var sexCategories = sexCheckbox(searchFormSex);
+    console.log("sexCategories:" + sexCategories);
+    
+    getInsuranceData(years, ageCategories, incomeCategories, sexCategories);
+
 }, false);
 });
