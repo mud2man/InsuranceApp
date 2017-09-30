@@ -1,15 +1,16 @@
 var KEY = 'ca17898b676ff6157b452fbbe3d4235b07356f3d';
 
-function getInsuranceData(years, ageCategories, incomeCategories, sexCategories){
+function getInsuranceData(years, ageCategories, incomeCategories, sexCategories, stateCode){
  $.ajax({
     url: "https://api.census.gov/data/timeseries/healthins/sahie",
     data: {
        get: "NAME,NIC_PT,NIC_MOE,NUI_PT,NUI_MOE,YEAR,AGECAT,IPRCAT,SEXCAT",
-       for: "state:36",
+       for: "state:" + stateCode,
        key: KEY
     },
     success: function(response){
      console.log(response);
+     console.log("stateCode @ getInsuranceData:" + stateCode);
      var queryRows = "";
      for(y = 0; y < years.length; ++y){
        var year = years[y];
@@ -22,7 +23,8 @@ function getInsuranceData(years, ageCategories, incomeCategories, sexCategories)
              for (r = 0; r < response.length; r++) {
                if(response[r][5] === year && response[r][6] === age && response[r][7] === income && response[r][8] === sex){
                   var queryRow = "";
-                  queryRow += "year: " + year;
+                  queryRow += "state: " + response[r][0] ;
+                  queryRow += ", year: " + year;
                   queryRow += ", age category: " + age;
                   queryRow += ", income category: " + income;
                   queryRow += ", sex category: " + sex;
@@ -100,8 +102,32 @@ function sexCheckbox(searchFormSex){
   return sexCategories;
 }
 
+function getStateCode(streetName, cityName, stateName){
+  var xmlHttp = new XMLHttpRequest();
+  var url = "https://geocoding.geo.census.gov/geocoder/geographies/address";
+  url = url + "?street=" + streetName;
+  url = url + "&city=" + cityName;
+  url = url + "&state=" + stateName;
+  url = url + "&benchmark=Public_AR_Census2010&vintage=Census2010_Census2010&layers=14&format=json";
+  xmlHttp.open("GET", url, false ); // false for synchronous request
+  xmlHttp.send(null);
+  var response = JSON.parse(xmlHttp.responseText);
+  
+  var stateCode = "?";
+  try {
+    stateCode = response["result"]["addressMatches"][0]["geographies"]["Census Blocks"][0]["STATE"]
+    console.log(stateCode);
+  }
+  catch(err) {
+    alert("Address not found, please check again !!");
+    console.log("err:" + err.message);
+  }
+
+  return stateCode;
+}
+
 $(document).ready(function() {
-  document.getElementById('searchFormSex').addEventListener('submit', function (e) {
+  document.getElementById('Address').addEventListener('submit', function (e) {
     e.preventDefault(); //prevent a submit button from submitting a form.
     var years = yearCheckbox(searchFormYear);
     console.log("years:" + years);
@@ -112,7 +138,12 @@ $(document).ready(function() {
     var sexCategories = sexCheckbox(searchFormSex);
     console.log("sexCategories:" + sexCategories);
     
-    getInsuranceData(years, ageCategories, incomeCategories, sexCategories);
-
+    var street = document.getElementById('street').value;
+    var city = document.getElementById('city').value;
+    var state = document.getElementById('state').value;
+    var stateCode = getStateCode(street, city, state);
+    if(stateCode != "?"){
+      getInsuranceData(years, ageCategories, incomeCategories, sexCategories, stateCode);
+    }
 }, false);
 });
