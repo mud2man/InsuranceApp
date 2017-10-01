@@ -37,7 +37,7 @@ function getInsuranceData(years, ageCategories, incomeCategories, sexCategories,
                   var insuredPercent = Math.round((insuredPeopleNum / peopleNum) * 100);
                   queryRow += ", insured percentage:" + insuredPercent.toString() + "%";
                   queryRow += "<br>";
-                  queryRow += ", insured margin of error:" + insuredPeopleMe.toString();
+                  queryRow += "insured margin of error:" + insuredPeopleMe.toString();
                   var uninsuredPercent = Math.round((uninsuredPeopleNum / peopleNum) * 100);
                   queryRow += ", uninsured percentage:" + uninsuredPercent.toString() + "%";
                   queryRow += ", uninsured margin of error:" + uninsuredPeopleMe.toString();
