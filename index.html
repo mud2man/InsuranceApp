@@ -8,6 +8,7 @@
 
 <h1 id="title">Insurance information</h1>
 
+<div class="searchFormYear">
 <form id="searchFormYear"> Year: <br> 
     <input type="checkbox" name="yaerCategory0" value="2006"> 2006<br>
     <input type="checkbox" name="yaerCategory1" value="2007"> 2007<br>
@@ -20,7 +21,9 @@
     <input type="checkbox" name="yaerCategory8" value="2014"> 2014<br>
     <input type="checkbox" name="yaerCategory9" value="2015"> 2015<br> <br>  
 </form>
+</div>
 
+<div class="searchFormAge">
 <form id="searchFormAge"> Age Category: <br>
     <input type="checkbox" name="ageCategory4" value="4"> 4: under 19 years<br>
     <input type="checkbox" name="ageCategory0" value="0"> 0: under 65 years<br>
@@ -29,7 +32,9 @@
     <input type="checkbox" name="ageCategory3" value="3"> 3: 50 to 64 years<br>
     <input type="checkbox" name="ageCategory5" value="5"> 5: 21 to 64 years<br> <br>  
 </form>
+</div>
 
+<div class="searchFormIncome">
 <form id="searchFormIncome"> Income Category: <br>
     <input type="checkbox" name="incomeCategory0" value="0"> 0: all income levels<br>
     <input type="checkbox" name="incomeCategory4" value="4"> 4: at or below 138% of poverty<br>
@@ -38,21 +43,26 @@
     <input type="checkbox" name="incomeCategory3" value="3"> 3: at or below 400% of poverty<br>
     <input type="checkbox" name="incomeCategory5" value="5"> 5: between 138% - 400% of poverty<br> <br>  
 </form>
+</div>
 
+<div class="searchFormSex">
 <form id="searchFormSex"> Sex Category: <br>
     <input type="checkbox" name="sexCategory0" value="0"> 0: both sexes<br>
     <input type="checkbox" name="sexCategory1" value="1"> 1: male<br>
     <input type="checkbox" name="sexCategory2" value="2"> 2: female<br> <br>  
 </form>
+</div>
 
+<div class="address">
 <form id="Address"> Address: <br>
-    Street: <input type="text" id="street"> example: 524 w 122nd street<br>
-    City:  <input type="text" id="city"> example: New York<br>
-    State: <input type="text" id="state"> example: NY<br> <br>  
+    Street: <input type="text" style="display: table-column; width:30%;" id="street"> Ex: 524 w 122nd street<br>
+    City:  <input type="text" style="display: table-column; width:33%;" id="city"> Ex: New York<br>
+    State: <input type="text" style="display: table-column; width:31.5%;" id="state"> Ex: NY<br> <br>  
     <button type="submit">Submit</button>
 </form>
+</div>
 
-<p id="PeopleCount"></p>
+<p id="PeopleCount" style="font-size:95%;"></p>
 
 <script src="script.js"></script>
 

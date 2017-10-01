@@ -23,23 +23,23 @@ function getInsuranceData(years, ageCategories, incomeCategories, sexCategories,
              for (r = 0; r < response.length; r++) {
                if(response[r][5] === year && response[r][6] === age && response[r][7] === income && response[r][8] === sex){
                   var queryRow = "";
-                  queryRow += "state: " + response[r][0] ;
-                  queryRow += ", year: " + year;
-                  queryRow += ", age category: " + age;
-                  queryRow += ", income category: " + income;
-                  queryRow += ", sex category: " + sex;
+                  queryRow += "state:" + response[r][0] ;
+                  queryRow += ", year:" + year;
+                  queryRow += ", age category:" + age;
+                  queryRow += ", income category:" + income;
+                  queryRow += ", sex category:" + sex;
                   var insuredPeopleNum = parseInt(response[r][1]);
                   var insuredPeopleMe = parseInt(response[r][2]);
                   var uninsuredPeopleNum = parseInt(response[r][3]);
                   var uninsuredPeopleMe = parseInt(response[r][4]);
                   var peopleNum = insuredPeopleNum + uninsuredPeopleNum;
-                  queryRow += ", peopel number: " + peopleNum.toString();
+                  queryRow += ", peopel number:" + peopleNum.toString();
                   var insuredPercent = Math.round((insuredPeopleNum / peopleNum) * 100);
-                  queryRow += ", insured percentage: " + insuredPercent.toString() + "%";
-                  queryRow += ", insured margin of error: " + insuredPeopleMe.toString();
+                  queryRow += ", insured percentage:" + insuredPercent.toString() + "%";
+                  queryRow += ", insured margin of error:" + insuredPeopleMe.toString();
                   var uninsuredPercent = Math.round((uninsuredPeopleNum / peopleNum) * 100);
-                  queryRow += ", uninsured percentage: " + uninsuredPercent.toString() + "%";
-                  queryRow += ", uninsured margin of error: " + uninsuredPeopleMe.toString();
+                  queryRow += ", uninsured percentage:" + uninsuredPercent.toString() + "%";
+                  queryRow += ", uninsured margin of error:" + uninsuredPeopleMe.toString();
                   queryRows += queryRow + "<br>";
                   console.log(response[r]);
                   break;
@@ -49,7 +49,12 @@ function getInsuranceData(years, ageCategories, incomeCategories, sexCategories,
          }
        }
      }
-     document.getElementById("PeopleCount").innerHTML = queryRows;
+     if(queryRows.length == 0){
+       document.getElementById("PeopleCount").innerHTML = "Sorry we have no data that year !!!";
+     }
+     else{
+       document.getElementById("PeopleCount").innerHTML = queryRows;
+     }
     }
  });
 }
@@ -108,7 +113,7 @@ function getStateCode(streetName, cityName, stateName){
   url = url + "?street=" + streetName;
   url = url + "&city=" + cityName;
   url = url + "&state=" + stateName;
-  url = url + "&benchmark=Public_AR_Census2010&vintage=Census2010_Census2010&layers=14&format=json";
+  url = url + "&benchmark=Public_AR_Census2010&vintage=Census2010_Census2010&layers=14&format=jsonp";
   xmlHttp.open("GET", url, false ); // false for synchronous request
   xmlHttp.send(null);
   var response = JSON.parse(xmlHttp.responseText);
@@ -124,6 +129,28 @@ function getStateCode(streetName, cityName, stateName){
   }
 
   return stateCode;
+}
+function httpGet(url){
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", url, false ); // false for synchronous request
+  xmlHttp.send(null);
+  var response = JSON.parse(xmlHttp.responseText);
+  console.log(response);
+}
+
+function test(){
+  $.ajax({
+     url: "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?format=jsonp",
+     dataType: "jsonp",
+     data: {
+        address: "4600 Silver Hill Rd, Suitland, MD, 20746",
+        benchmark: 9
+     },
+     success: function(response){
+      console.log("test~~~~~~~~~~~~");
+       console.log(response);
+    }
+ });
 }
 
 $(document).ready(function() {
@@ -141,9 +168,15 @@ $(document).ready(function() {
     var street = document.getElementById('street').value;
     var city = document.getElementById('city').value;
     var state = document.getElementById('state').value;
+    //console.log("before test");
+    //test();
+    //console.log("after test");
     var stateCode = getStateCode(street, city, state);
     if(stateCode != "?"){
       getInsuranceData(years, ageCategories, incomeCategories, sexCategories, stateCode);
     }
+
+    //httpGet("https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?format=jasonp")
+
 }, false);
 });
