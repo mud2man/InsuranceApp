@@ -2,6 +2,7 @@ var KEY = 'ca17898b676ff6157b452fbbe3d4235b07356f3d';
 
 function getInsuranceData(years, ageCategories, incomeCategories, sexCategories, stateCode){
  $.ajax({
+    async: false,
     url: "https://api.census.gov/data/timeseries/healthins/sahie",
     data: {
        get: "NAME,NIC_PT,NIC_MOE,NUI_PT,NUI_MOE,YEAR,AGECAT,IPRCAT,SEXCAT",
@@ -10,7 +11,6 @@ function getInsuranceData(years, ageCategories, incomeCategories, sexCategories,
     },
     success: function(response){
      console.log(response);
-     console.log("stateCode @ getInsuranceData:" + stateCode);
      var queryRows = "";
      for(y = 0; y < years.length; ++y){
        var year = years[y];
@@ -107,48 +107,97 @@ function sexCheckbox(searchFormSex){
   return sexCategories;
 }
 
-function getStateCode(streetName, cityName, stateName){
-  var xmlHttp = new XMLHttpRequest();
-  var url = "https://geocoding.geo.census.gov/geocoder/geographies/address";
-  url = url + "?street=" + streetName;
-  url = url + "&city=" + cityName;
-  url = url + "&state=" + stateName;
-  url = url + "&benchmark=Public_AR_Census2010&vintage=Census2010_Census2010&layers=14&format=jsonp";
-  xmlHttp.open("GET", url, false ); // false for synchronous request
-  xmlHttp.send(null);
-  var response = JSON.parse(xmlHttp.responseText);
-  
-  var stateCode = "?";
-  try {
-    stateCode = response["result"]["addressMatches"][0]["geographies"]["Census Blocks"][0]["STATE"]
-    console.log(stateCode);
-  }
-  catch(err) {
-    alert("Address not found, please check again !!");
-    console.log("err:" + err.message);
-  }
-
-  return stateCode;
+function getStateCode(state){
+  var dict = {};
+  dict["AL"] = "01";
+  dict["AK"] = "02";
+  dict["AZ"] = "04";
+  dict["AR"] = "05";
+  dict["CA"] = "06";
+  dict["CO"] = "08";
+  dict["CT"] = "09";
+  dict["DE"] = "10";
+  dict["DC"] = "11";
+  dict["FL"] = "12";
+  dict["GA"] = "13";
+  dict["HI"] = "15";
+  dict["ID"] = "16";
+  dict["IL"] = "17";
+  dict["IN"] = "18";
+  dict["IA"] = "19";
+  dict["KS"] = "20";
+  dict["KY"] = "21";
+  dict["LA"] = "22";
+  dict["ME"] = "23";
+  dict["MD"] = "24";
+  dict["MA"] = "25";
+  dict["MI"] = "26";
+  dict["MN"] = "27";
+  dict["MS"] = "28";
+  dict["MO"] = "29";
+  dict["MT"] = "30";
+  dict["NE"] = "31";
+  dict["NV"] = "32";
+  dict["NH"] = "33";
+  dict["NJ"] = "34";
+  dict["NM"] = "35";
+  dict["NY"] = "36";
+  dict["NC"] = "37";
+  dict["ND"] = "38";
+  dict["OH"] = "39";
+  dict["OK"] = "40";
+  dict["OR"] = "41";
+  dict["PA"] = "42";
+  dict["RI"] = "44";
+  dict["SC"] = "45";
+  dict["SD"] = "46";
+  dict["TN"] = "47";
+  dict["TX"] = "48";
+  dict["UT"] = "49";
+  dict["VT"] = "50";
+  dict["VA"] = "51";
+  dict["WA"] = "53";
+  dict["WV"] = "54";
+  dict["WI"] = "55";
+  dict["WY"] = "56";
+  return dict[state];
 }
-function httpGet(url){
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", url, false ); // false for synchronous request
-  xmlHttp.send(null);
-  var response = JSON.parse(xmlHttp.responseText);
-  console.log(response);
-}
 
-function test(){
+function getInsuranceDataWithAddress(address){
   $.ajax({
+     async: false,
      url: "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?format=jsonp",
      dataType: "jsonp",
      data: {
-        address: "4600 Silver Hill Rd, Suitland, MD, 20746",
+        address: address,
         benchmark: 9
      },
      success: function(response){
-      console.log("test~~~~~~~~~~~~");
-       console.log(response);
+       var state = "?";
+       try {
+         state = response.result.addressMatches[0].addressComponents.state;
+         console.log(state);
+       }
+       catch(err) {
+         alert("Address not found, please check again !!");
+         console.log("err:" + err.message);
+         return;
+       }
+
+       var stateCode = getStateCode(state);
+       console.log("stateCode:" + stateCode);
+       var years = yearCheckbox(searchFormYear);
+       console.log("years:" + years);
+       var ageCategories = ageCheckbox(searchFormAge);
+       console.log("ageCategories:" + ageCategories);
+       var incomeCategories = ageCheckbox(searchFormIncome);
+       console.log("incomeCategories:" + incomeCategories);
+       var sexCategories = sexCheckbox(searchFormSex);
+       console.log("sexCategories:" + sexCategories);
+
+       if(stateCode != "?"){
+         getInsuranceData(years, ageCategories, incomeCategories, sexCategories, stateCode);
+       }
     }
  });
 }
@@ -156,27 +205,6 @@ function test(){
 $(document).ready(function() {
   document.getElementById('Address').addEventListener('submit', function (e) {
     e.preventDefault(); //prevent a submit button from submitting a form.
-    var years = yearCheckbox(searchFormYear);
-    console.log("years:" + years);
-    var ageCategories = ageCheckbox(searchFormAge);
-    console.log("ageCategories:" + ageCategories);
-    var incomeCategories = ageCheckbox(searchFormIncome);
-    console.log("incomeCategories:" + incomeCategories);
-    var sexCategories = sexCheckbox(searchFormSex);
-    console.log("sexCategories:" + sexCategories);
-    
-    var street = document.getElementById('street').value;
-    var city = document.getElementById('city').value;
-    var state = document.getElementById('state').value;
-    //console.log("before test");
-    //test();
-    //console.log("after test");
-    var stateCode = getStateCode(street, city, state);
-    if(stateCode != "?"){
-      getInsuranceData(years, ageCategories, incomeCategories, sexCategories, stateCode);
-    }
-
-    //httpGet("https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?format=jasonp")
-
+    getInsuranceDataWithAddress(document.getElementById('address').value);
 }, false);
 });

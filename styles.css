@@ -37,8 +37,9 @@ div.searchFormSex {
 div.address {
     position: absolute;
     top: 80px;
-    left: 900px;
+    left: 850px;
     height: 100px;
+    width: 800px;
 }
 
 div.PeopleCount {
