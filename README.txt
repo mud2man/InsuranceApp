@@ -1,8 +1,5 @@
 1. Dependencies:
-    If you use Safari, you don't need to install anything. But if you use Chrome, you need to install the Chrome plug-in
-https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en, and enable 
-cross-origin resource shaaring
-
+    No dependence
 2. How to run:
     Open the folder "InsuranceApp", and use browser Chrome to open the index.html. You can pick up any choice from every catagories
 like Year, Age Categories, and you need to type into the address. Every row on the address has their example. Please note that you must follow the format. If you live in New Your, then you need to type NY into State box. Otherwise, you will see the pop-up 
