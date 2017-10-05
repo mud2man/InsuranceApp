@@ -11,7 +11,9 @@ function getInsuranceData(years, ageCategories, incomeCategories, sexCategories,
     },
     success: function(response){
      console.log(response);
+     var colors = ["success", "active", "info", "warning"];
      var queryRows = "";
+     var rowCount = 0;
      for(y = 0; y < years.length; ++y){
        var year = years[y];
        for(a = 0; a < ageCategories.length; ++a){
@@ -22,25 +24,28 @@ function getInsuranceData(years, ageCategories, incomeCategories, sexCategories,
              var sex = sexCategories[s];
              for (r = 0; r < response.length; r++) {
                if(response[r][5] === year && response[r][6] === age && response[r][7] === income && response[r][8] === sex){
-                  var queryRow = "";
-                  queryRow += "state:" + response[r][0] ;
-                  queryRow += ", year:" + year;
-                  queryRow += ", age category:" + age;
-                  queryRow += ", income category:" + income;
-                  queryRow += ", sex category:" + sex;
+                  rowCount++;
+                  var queryRow = '<tr class="' + colors[rowCount % colors.length] + '"> ';
+                  queryRow += '<td>' + response[r][0] + '</td> ';
+                  queryRow += '<td>' + year + '</td> ';
+                  queryRow += '<td>' + age + '</td> ';
+                  queryRow += '<td>' + income + '</td> ';
+                  queryRow += '<td>' + sex + '</td> ';
                   var insuredPeopleNum = parseInt(response[r][1]);
                   var insuredPeopleMe = parseInt(response[r][2]);
                   var uninsuredPeopleNum = parseInt(response[r][3]);
                   var uninsuredPeopleMe = parseInt(response[r][4]);
                   var peopleNum = insuredPeopleNum + uninsuredPeopleNum;
-                  queryRow += ", peopel number:" + peopleNum.toString();
+                  queryRow += '<td>' + peopleNum.toString() + '</td> ';
                   var insuredPercent = Math.round((insuredPeopleNum / peopleNum) * 100);
-                  queryRow += ", insured percentage:" + insuredPercent.toString() + "%";
-                  queryRow += ", insured margin of error:" + insuredPeopleMe.toString();
+                  queryRow += '<td>' + insuredPercent.toString() + '%' + '</td> ';
+                  queryRow += '<td>' + insuredPeopleMe.toString() + '</td> ';
                   var uninsuredPercent = Math.round((uninsuredPeopleNum / peopleNum) * 100);
-                  queryRow += ", uninsured percentage:" + uninsuredPercent.toString() + "%";
-                  queryRow += ", uninsured margin of error:" + uninsuredPeopleMe.toString();
-                  queryRows += queryRow + "<br>";
+                  queryRow += '<td>' + uninsuredPercent.toString() + '%' + '</td> ';
+                  queryRow += '<td>' + uninsuredPeopleMe.toString() + '</td> ';
+                  queryRow += '</tr>'
+                  queryRows +=  queryRow;
+                  //queryRows += queryRow + "<br>";
                   console.log(response[r]);
                   break;
                }
@@ -50,10 +55,10 @@ function getInsuranceData(years, ageCategories, incomeCategories, sexCategories,
        }
      }
      if(queryRows.length == 0){
-       document.getElementById("PeopleCount").innerHTML = "Sorry we have no data that year !!!";
+       document.getElementById("bootstrapTableBody").innerHTML = "Sorry we have no data that year !!!";
      }
      else{
-       document.getElementById("PeopleCount").innerHTML = queryRows;
+       document.getElementById("bootstrapTableBody").innerHTML = queryRows;
      }
     }
  });

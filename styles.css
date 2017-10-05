@@ -13,7 +13,7 @@ div.searchFormYear {
 div.searchFormAge {
     position: absolute;
     top: 80px;
-    left: 150px;
+    left: 120px;
     width: 200px;
     height: 100px;
 }
@@ -21,7 +21,7 @@ div.searchFormAge {
 div.searchFormIncome {
     position: absolute;
     top: 80px;
-    left: 350px;
+    left: 300px;
     width: 300px;
     height: 100px;
 }
@@ -29,7 +29,7 @@ div.searchFormIncome {
 div.searchFormSex {
     position: absolute;
     top: 80px;
-    left: 650px;
+    left: 570px;
     width: 200px;
     height: 100px;
 }
@@ -37,7 +37,7 @@ div.searchFormSex {
 div.address {
     position: absolute;
     top: 80px;
-    left: 850px;
+    left: 750px;
     height: 100px;
     width: 800px;
 }
@@ -48,8 +48,8 @@ div.PeopleCount {
     left: 10px;
 }
 
-p{
+div.queryTable {
     position: absolute;
-    left: 10px;
     top: 300px;
+    left: 10px;
 }
